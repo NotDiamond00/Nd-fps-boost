@@ -1,3 +1,4 @@
+
 plugins {
     id 'net.fabricmc.fabric-loom' version "${loom_version}"
 }
@@ -5,10 +6,13 @@ plugins {
 version = project.mod_version
 group = project.maven_group
 
-base { archivesName = project.archives_base_name }
+base {
+    archivesName = project.archives_base_name
+}
 
 loom {
     splitEnvironmentSourceSets()
+
     mods {
         "nd_fps_boost" {
             sourceSet sourceSets.main
@@ -17,13 +21,12 @@ loom {
     }
 }
 
-
 dependencies {
     minecraft "com.mojang:minecraft:${minecraft_version}"
 
-    modImplementation "net.fabricmc:fabric-loader:${loader_version}"
+    implementation "net.fabricmc:fabric-loader:${loader_version}"
 
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
 }
 
 tasks.withType(JavaCompile).configureEach {
@@ -37,6 +40,9 @@ java {
 }
 
 processResources {
-    inputs.property 'version', project.version
-    filesMatching('fabric.mod.json') { expand 'version': project.version }
+    inputs.property "version", project.version
+
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
+    }
 }
