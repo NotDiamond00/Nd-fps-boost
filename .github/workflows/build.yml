@@ -4,11 +4,16 @@ name: Build ND FPS Boost
 on:
   workflow_dispatch:
   push:
-    branches: [ main ]
+    branches:
+      - main
+
+permissions:
+  contents: read
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
 
     steps:
       - name: Checkout source
@@ -19,17 +24,38 @@ jobs:
         with:
           distribution: temurin
           java-version: '25'
-          cache: gradle
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '9.6.0'
 
-      - name: Build mod
-        run: gradle build --no-daemon
+      - name: Build mod with retries
+        shell: bash
+        run: |
+          set +e
+
+          for attempt in 1 2 3; do
+            echo "Build attempt $attempt of 3"
+
+            gradle build --no-daemon
+            result=$?
+
+            if [ "$result" -eq 0 ]; then
+              exit 0
+            fi
+
+            if [ "$attempt" -lt 3 ]; then
+              echo "Build failed. Retrying in 15 seconds..."
+              sleep 15
+            fi
+          done
+
+          echo "Build failed after 3 attempts."
+          exit 1
 
       - name: Upload JAR
+        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: ND-FPS-Boost-JAR
