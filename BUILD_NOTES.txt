@@ -1,0 +1,1 @@
+This archive includes Gradle wrapper configuration but not gradlew scripts or gradle-wrapper.jar. Use an installed Gradle 9.6.0 (`gradle build`) or generate a wrapper locally with Gradle 9.6.0.
