@@ -31,7 +31,6 @@ dependencies {
 java {
     sourceCompatibility = JavaVersion.VERSION_25
     targetCompatibility = JavaVersion.VERSION_25
-
     withSourcesJar()
 }
 
@@ -46,4 +45,9 @@ processResources {
     filesMatching("fabric.mod.json") {
         expand "version": project.version
     }
+}
+
+tasks.named("jar") {
+    from(sourceSets.client.output)
+    from(sourceSets.main.output)
 }
